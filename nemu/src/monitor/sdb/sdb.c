@@ -69,6 +69,26 @@ static int cmd_si(char *args) {
   return 0;
 }
 
+static int cmd_info(char *args) {
+  // extract the first argument
+  char *info_type = strtok(NULL, " ");
+  if (info_type != NULL) {
+    if (strcmp(info_type, "r") == 0) {
+      isa_reg_display();
+    }
+    else if (strcmp(info_type, "w") == 0) {
+      // watchpoint_display();
+    }
+    else {
+      printf("Please offer a valid info type: \"r\" or \"w\"\n");
+    }
+  }
+  else {
+    printf("Please offer a valid info type: \"r\" or \"w\"\n");
+  }
+  return 0;
+}
+
 static struct {
   const char *name;
   const char *description;
@@ -80,6 +100,7 @@ static struct {
 
   /* TODO: Add more commands */
   { "si", "Single step execution: [si N]", cmd_si },
+  { "info", "Print program status: [info r / info w]", cmd_info },
 
 };
 

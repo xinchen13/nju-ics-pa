@@ -26,6 +26,13 @@ int good = (nemu_state.state == NEMU_END && nemu_state.halt_ret == 0) || (nemu_s
 
 `sscanf`通常被用来解析并转换字符串，其格式定义灵活多变，可以实现很强大的字符串解析功能: 在这里从字符串读入格式化内容，并解析为`int`类型数字, `strtok()`可以每次提取一个词条(提取参数)
 
+### 打印寄存器
+要求执行`info r`之后, 就调用`nemu/src/isa/$ISA/reg.c`目录下的`isa_reg_display()`, 在里面直接通过`printf()`输出所有寄存器的值即可. RTFSC可知，寄存器结构体`CPU_state`的定义放在`nemu/src/isa/$ISA/include/isa-def.h`中, 并在`nemu/src/cpu/cpu-exec.c`中定义一个全局变量`cpu`
+
+首先在`cmd_table`中添加`info`命令, 并设置参数`r`. 之后就在`cmd_info(char *args)`函数中利用`strcmp()`进行参数判断与调用`isa_reg_display()`
+
+在`isa_reg_display()`中通过`printf()`格式控制输出`pc`和32个通用寄存器的值，由于ISA为`riscv32`, 因此通用寄存器可以32位表示, 采用api提供的`FMT_WORD`来输出
+
 # PA2
 
 # PA3

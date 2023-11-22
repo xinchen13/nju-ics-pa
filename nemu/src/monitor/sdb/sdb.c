@@ -135,6 +135,37 @@ static int cmd_p(char *args) {
   return 0;
 }
 
+static int cmd_w(char *args) {
+  bool success = true;
+  if (args != NULL) {
+    WP* wp = new_wp(args, &success);
+    if (success) {
+      printf("watchpoint %d: %s\n", wp->NO, wp->WP_expr);
+    }
+    else {
+      printf("failed to set watchpoint!!!!\n");
+      // if expr() in new_wp() fails, free the wp allocated
+      free_wp(wp->NO);
+    }
+    return 0;
+  }
+  printf("please offer the expr to watch!!!!\n");
+  return 0;
+}
+
+static int cmd_d(char *args) {
+  int num = 0;
+  if (args != NULL) {
+    // get num and free
+    sscanf(args, "%d", &num);
+    free_wp(num);
+  }
+  else {
+    printf("enter the number of wp to del it~\n");
+  }
+  return 0;
+}
+
 static struct {
   const char *name;
   const char *description;
@@ -149,7 +180,8 @@ static struct {
   { "info", "Print program status: [info r / info w]", cmd_info },
   { "x", "Scan the memory: [x N expr]", cmd_x },
   { "p", "Expression evaluation: [p EXPR]", cmd_p },
-
+  { "w", "Set watchpoint: [w expr]", cmd_w },
+  { "d", "Delete watchpoint by number: [d N]", cmd_d },
 };
 
 #define NR_CMD ARRLEN(cmd_table)

@@ -5,6 +5,8 @@
 ### 尝试配置、编译并运行nemu
 
 # PA1
+### 初始化 `am-kernels`
+### 在配置文件中选择ISA为riscv32
 
 # PA2
 

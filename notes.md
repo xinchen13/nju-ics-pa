@@ -193,6 +193,19 @@ override ARGS += $(ARGS_BATCH)
 
 - `make menuconfig`开启`CONFIG_BATCH_MODE`后回到`am-kernels`目录，输入`make ARCH=riscv32-nemu ALL=dummy run`即按批处理模式打开nemu，直接运行客户程序dummy输出结果
 
+### 实现字符串处理函数
+根据需要实现`abstract-machine/klib/src/string.c`中列出的字符串处理函数, 让`cpu-tests`中的测试用例`string`可以成功运行
+
+- 采用`man 3 function_name`的方法来查看函数手册，根据描述在`abstract-machine/klib/src/string.c`实现对应函数即可
+- P.S. 对于`memmove`的实现，通过在函数内的tmp临时变量作为缓冲，设置的大小为256(也就是说n > 256会产生未定义行为)
+
+### 实现sprintf
+为了运行测试用例`hello-str`, 还需要实现`abstract-machine/klib/src/stdio.c`中的库函数`sprintf()`. 和其它库函数相比, `sprintf()`比较特殊, 因为它的参数数目是可变的. 为了获得数目可变的参数, 可以使用C库`stdarg.h`中提供的宏, 具体用法查阅`man stdarg`. 目前只需要实现`%s`和`%d`就能通过`hello-str`的测试了, 其它功能(包括位宽, 精度等)可以在将来需要的时候再自行实现
+
+- `stdarg`提供了va_list类型与`va_start()`, `va_arg()`, `va_end()`三个宏，进行参数提取
+- 如果fmt中字符不涉及格式化输出, 则直接写入out中, 否则对类型进行匹配, 格式化输出对应的参数
+- P.S. 暂不支持形如%%d形式的参数
+
 # PA3
 
 # PA4

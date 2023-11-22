@@ -80,7 +80,7 @@ static int cmd_info(char *args) {
       isa_reg_display();
     }
     else if (strcmp(info_type, "w") == 0) {
-      // watchpoint_display();
+      watchpoint_display();
     }
     else {
       printf("Please offer a valid info type: \"r\" or \"w\"\n");

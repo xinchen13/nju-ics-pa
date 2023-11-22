@@ -166,6 +166,10 @@ config DEBUG_EXPR
   bool "Enable test gen-expr"
   default n
 
+config WATCHPOINT
+  bool "Enable watchpoints check"
+  default n
+
 choice
   prompt "Reference design"
   default DIFFTEST_REF_SPIKE if ISA_riscv64 || ISA_riscv32

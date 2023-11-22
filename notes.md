@@ -204,7 +204,7 @@ override ARGS += $(ARGS_BATCH)
 
 - `stdarg`提供了va_list类型与`va_start()`, `va_arg()`, `va_end()`三个宏，进行参数提取
 - 如果fmt中字符不涉及格式化输出, 则直接写入out中, 否则对类型进行匹配, 格式化输出对应的参数
-- P.S. 暂不支持形如%%d形式的参数
+- P.S. 暂不支持形如`%%d`形式的参数
 
 # PA3
 

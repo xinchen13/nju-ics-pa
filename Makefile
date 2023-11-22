@@ -1,9 +1,9 @@
-STUID = 211220000
-STUNAME = 张三
+STUID = 13
+STUNAME = xinchen
 
 # DO NOT modify the following code!!!
 
-GITFLAGS = -q --author='tracer-ics2022 <tracer@njuics.org>' --no-verify --allow-empty
+GITFLAGS = -q --author='xinchen <fxc23@mails.tsinghua.edu.cn>' --no-verify --allow-empty
 
 # prototype: git_commit(msg)
 define git_commit

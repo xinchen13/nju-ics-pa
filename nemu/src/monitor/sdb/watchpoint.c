@@ -120,7 +120,7 @@ int check_watchpoint() {
     new_val = expr(wp_ptr->WP_expr, &success);
     if (success) {
         if (wp_ptr->val != new_val) {
-          printf("\nwatchpoint %d: %s\nold value = %d = " FMT_WORD "\nnew value = %d = " FMT_WORD "\n",
+          printf("watchpoint %d: %s\nold value = %d = " FMT_WORD "\nnew value = %d = " FMT_WORD "\n",
           wp_ptr->NO, wp_ptr->WP_expr, wp_ptr->val, wp_ptr->val, new_val, new_val);
           wp_ptr->val = new_val;
           break_flag = 1;

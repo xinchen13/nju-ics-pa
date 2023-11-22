@@ -15,6 +15,7 @@
 
 #include <isa.h>
 #include <memory/paddr.h>
+#include <utils.h>
 
 void init_rand();
 void init_log(const char *log_file);
@@ -100,6 +101,7 @@ static int parse_args(int argc, char *argv[]) {
 
 void init_monitor(int argc, char *argv[]) {
   /* Perform some global initialization. */
+  // init_buffer(&iringbuf);
 
   /* Parse arguments. */
   parse_args(argc, argv);

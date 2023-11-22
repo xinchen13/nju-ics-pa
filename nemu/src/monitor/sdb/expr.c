@@ -316,7 +316,7 @@ bool check_parentheses(int p, int q, bool *success) {
 }
 
 // get the main operator 
-int get_main_operator(int p, int q) {
+int get_main_operator(int p, int q, bool *success) {
   int mp_position = -1;
   int level = 0;
   for (int i = p; i <= q; i++) {
@@ -332,6 +332,10 @@ int get_main_operator(int p, int q) {
           mp_position = i;
        }
     }
+  }
+  if (mp_position == -1) {
+    *success = false;
+    return 0;
   }
   return mp_position;
 }
@@ -370,7 +374,7 @@ word_t eval(int p, int q, bool *success) {
     }
     else if (!valid_parentheses && *success) {
       // find main operator  
-      int mp_position = get_main_operator(p, q);
+      int mp_position = get_main_operator(p, q, success);
       // divide and conquer
       switch (tokens[mp_position].type) {
         case '+': 
@@ -396,7 +400,9 @@ word_t eval(int p, int q, bool *success) {
           return eval(p, mp_position - 1, success) && eval(mp_position + 1, q, success);
         case TK_DEREF:
           return vaddr_read(eval(mp_position + 1, q, success), 4);
-        default: assert(0);
+        // unknow type: failed
+        default: 
+          return 0;
       }
     }
     else {

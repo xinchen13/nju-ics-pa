@@ -206,6 +206,13 @@ override ARGS += $(ARGS_BATCH)
 - 如果fmt中字符不涉及格式化输出, 则直接写入out中, 否则对类型进行匹配, 格式化输出对应的参数
 - P.S. 暂不支持形如`%%d`形式的参数
 
+### 实现iringbuf
+- 在`cpu-exec.c`中实现了`iringbuf`数据结构以及初始化、写入与输出的函数
+- 通过把128位的`s->logbuf`写入iringbuf来维护指令执行历史
+- 当遇到`nemu_state.state = NEMU_ABORT`时，输出缓冲区
+- 整体通过宏配置，实现了itrace的开关: 关闭时不队iringbuf进行初始化和读写
+- 把`inst.c`中的add指令注释后运行nemu，验证实现正确性
+
 # PA3
 
 # PA4

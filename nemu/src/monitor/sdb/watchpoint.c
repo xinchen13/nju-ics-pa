@@ -33,6 +33,7 @@ void init_wp_pool() {
 }
 
 /* TODO: Implement the functionality of watchpoint */
+
 // get a new watchpoints in free_ and return
 WP* new_wp(char* WP_expr, bool *success) {
   // no available watchpoints in free_

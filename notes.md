@@ -166,6 +166,32 @@ P.S.:每次生成新的表达式需要对buf进行清零操作，具体为`buf[0
 最后，使用'w'命令来申请监视点; 使用`info w`命令来打印使用中的监视点信息, 至于要打印什么, 可以参考GDB中`info watchpoints`的运行结果, 在这里选择打印监视点的序号和监视表达式; 使用`d`命令来删除监视点, 只需要释放相应的监视点结构即可, 通过序号调用`free_wp()`删除监视点
 
 # PA2
+### 整理一条指令在NEMU中的执行过程
+在此以指令`00 00 02 97 auipc   t0, 0`为例，根据GDB的调试过程, 可以看到在取指阶段，`s->isa.inst.val = inst_fetch(&s->snpc, 4);`将指令读取到s结构体成员中; 之后在`decode_exec(Decode *s)`函数中，设置了rd, src1, src2, imm，并维护了下一条动态指令; 之后`INSTPAT()`识别到`auipc`指令，设置rs1, rs2与rd; 之后把U型立即数记录到操作数imm，执行`R(rd) = s->pc + imm`就完成了指令执行，接着更新cpu.pc就完成了pc的更新，这就是`auipc`指令的执行过程
+
+### 运行第一个客户程序 + 实现更多的指令
+在`am-kernels/tests/cpu-tests/`目录下准备了一些简单的测试用例. 在该目录下执行`make ARCH=$ISA-nemu ALL=xxx run`, 其中xxx为测试用例的名称(不包含`.c`后缀). 上述`make run`的命令最终会启动nemu, 并运行相应的客户程序. 如果需要使用GDB来调试nemu运行客户程序的情况, 可以执行以下命令`make ARCH=$ISA-nemu ALL=xxx gdb`
+
+- 在`inst.c`中实现不同类型指令的译码和执行
+- 其中主要的bug在于实现mulh指令时，要注意类型准换为了确保值不变，需要先将word_t(即uint32_t)转为int32_t, 再转为int64_t，这样才能确保正确的符号扩展
+- 通过cpu-tests中各测试用例(除了string和hello-str还需要实现额外的内容才能运行)，完成了nemu模拟器中RV32IM基本上所有的指令的编写, 主要的工作量在于编写匹配规则以及对应操作，各条指令的类型与功能主要参考了`riscv-card`以及`riscv-spec`
+
+
+### 通过批处理模式运行nemu
+我们之前启动nemu的时候, 每次都需要手动键入`c`才能运行客户程序. 但如果不是为了使用nemu中的sdb, 我们其实可以节省`c`的键入. nemu中实现了一个批处理模式, 可以在启动nemu之后直接运行客户程序
+
+- 阅读nemu的代码，发现`init_monitor()`函数调用了`parse_args()`，给`main()`传入合适的参数就可以调用`sdb_set_batch_mode()`将`is_batch_mode`置为true，从而启动nemu后就能直接运行客户程序, 使得通过AM的Makefile可以默认启动批处理模式的nemu
+- 阅读Makefile，主要关注`make run`所对应的部分，查看传入参数, 发现在`nemu/scripts/native.mk`中`ARGS`变量对应传给`main()`的参数，因此设置一个新变量`$(ARGS_BATCH)`，并在`Kconfig`文件中添加开关选项`CONFIG_BATCH_MODE`来控制开启(ARGS_BATCH = --batch)与关闭. 在`nemu/scripts/native.mk`中添加如下语句:
+
+```makefile
+# run in batch mode
+ifdef CONFIG_BATCH_MODE
+ARGS_BATCH = --batch
+endif
+override ARGS += $(ARGS_BATCH)
+```
+
+- `make menuconfig`开启`CONFIG_BATCH_MODE`后回到`am-kernels`目录，输入`make ARCH=riscv32-nemu ALL=dummy run`即按批处理模式打开nemu，直接运行客户程序dummy输出结果
 
 # PA3
 

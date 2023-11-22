@@ -159,7 +159,11 @@ config DIFFTEST
     Note that this will significantly reduce the performance of NEMU.
 
 config TOKEN_DEBUG
-  bool "Enable degub make_token()"
+  bool "Enable degub function make_token()"
+  default n
+
+config DEBUG_EXPR
+  bool "Enable test gen-expr"
   default n
 
 choice

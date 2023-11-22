@@ -22,6 +22,7 @@
 
 // this should be enough
 static char buf[65536] = {};
+static char buf_expr[65536] = {}; //  for nemu
 static char code_buf[65536 + 128] = {}; // a little larger than `buf`
 static char *code_format =
 "#include <stdio.h>\n"
@@ -31,8 +32,104 @@ static char *code_format =
 "  return 0; "
 "}";
 
-static void gen_rand_expr() {
-  buf[0] = '\0';
+// get random number in [0, n)
+uint32_t choose(uint32_t n){
+  return rand() % n;
+}
+
+// generate a random decimal number (unsigned, e.g. 13u)
+void gen_num(){
+  char tmp[20];
+  tmp[0] = '\0';
+  uint32_t number = choose(100); // 0-99
+  sprintf(tmp ,"%u", number);
+  strcat(tmp, "u");
+  strcat(buf, tmp);
+}
+
+// generate a string (e.g. operator)
+void gen(char gen_str){
+  char tmp[2] = {gen_str, '\0'};
+  strcat(buf, tmp);
+}
+
+// genrate ramdom blanks
+void gen_rand_blank(){
+  switch(choose(3)){
+    case 0:
+      break;
+    case 1:
+      gen(' ');
+      break;
+    case 2:
+      gen(' ');
+      gen(' ');
+      break;
+    default:
+      break;
+  }
+}
+
+// genrate random operators: +, -, *, /
+void gen_rand_op(){
+  switch(choose(4)){
+    case 0:
+      gen('+');
+      break;
+    case 1:
+      gen('-');
+      break;
+    case 2:
+      gen('*');
+      break;
+    default:
+      gen('/');
+      break;
+  }
+}
+
+// generate random expression, limit length
+static void gen_rand_expr(unsigned int cnt) {
+  if (strlen(buf) > 900 || cnt == 0){
+    gen_num();
+  }
+  else{
+    switch (choose(3)) {
+      case 0: 
+        gen_num();
+        break;
+      case 1: 
+        gen('('); 
+        gen_rand_blank();
+        gen_rand_expr(cnt-1);
+        gen_rand_blank(); 
+        gen(')'); 
+        break;
+      default: 
+        gen_rand_blank();
+        gen_rand_expr(cnt-1);
+        gen_rand_blank(); 
+        gen_rand_op(); 
+        gen_rand_blank();
+        gen_rand_expr(cnt-1);
+        gen_rand_blank();
+        break;
+    }
+  }
+}
+
+// generate expression to nemu, drop 'u' from buf
+void gen_nemu_expr(char *buf, char *buf_expr){
+  int i = 0;
+  int j = 0;
+  while(buf[i] != '\0'){
+    if(buf[i] != 'u'){
+      buf_expr[j] = buf[i];
+      j++;
+    }
+    i++;
+  }
+  buf_expr[j] = '\0';
 }
 
 int main(int argc, char *argv[]) {
@@ -44,7 +141,9 @@ int main(int argc, char *argv[]) {
   }
   int i;
   for (i = 0; i < loop; i ++) {
-    gen_rand_expr();
+    buf[0] = '\0';
+    gen_rand_expr(10);
+    gen_nemu_expr(buf, buf_expr);
 
     sprintf(code_buf, code_format, buf);
 
@@ -53,7 +152,7 @@ int main(int argc, char *argv[]) {
     fputs(code_buf, fp);
     fclose(fp);
 
-    int ret = system("gcc /tmp/.code.c -o /tmp/.expr");
+    int ret = system("gcc -Werror /tmp/.code.c -o /tmp/.expr");
     if (ret != 0) continue;
 
     fp = popen("/tmp/.expr", "r");
@@ -63,7 +162,7 @@ int main(int argc, char *argv[]) {
     ret = fscanf(fp, "%d", &result);
     pclose(fp);
 
-    printf("%u %s\n", result, buf);
+    printf("%u %s\n", result, buf_expr);
   }
   return 0;
 }

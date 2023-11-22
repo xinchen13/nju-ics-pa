@@ -1,5 +1,7 @@
-# ICS2022 Programming Assignment
+# nju-ics-pa
+my implementation for [NJU ICS PA](https://github.com/NJU-ProjectN/ics-pa.git) (source branch: 2022)
 
+## Introduction
 This project is the programming assignment of the class ICS(Introduction to Computer System)
 in Department of Computer Science and Technology, Nanjing University.
 
@@ -17,3 +19,7 @@ The following subprojects/components are included. Some of them are not fully im
 * [Abstract-Machine](https://github.com/NJU-ProjectN/abstract-machine)
 * [Nanos-lite](https://github.com/NJU-ProjectN/nanos-lite)
 * [Navy-apps](https://github.com/NJU-ProjectN/navy-apps)
+
+
+## notes
+* [notes-4-nju-ics-pa](./notes.md)

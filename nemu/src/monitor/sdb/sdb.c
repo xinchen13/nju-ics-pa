@@ -18,6 +18,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
+#include <memory/vaddr.h>
 
 static int is_batch_mode = false;
 
@@ -89,6 +90,36 @@ static int cmd_info(char *args) {
   return 0;
 }
 
+static int cmd_x(char *args) {
+  // extract the first argument
+  char *count_str = strtok(NULL, " ");
+  // extract the second argument
+  char *base_addr_str = strtok(NULL, " ");
+  // get the 4-byte memory count to scan 
+  int count = 1;
+  if (count_str != NULL) {
+    sscanf(count_str, "%d", &count);
+  }
+  // get the base memory
+  word_t base_addr = 0x80000000;
+  bool eval_success = true;
+  if (base_addr_str != NULL) {
+    base_addr = expr(base_addr_str, &eval_success);
+    if (eval_success){
+      // print the value by vaddr_read()
+      word_t addr;
+      for (int i = 0; i < count; i++) {
+        addr = base_addr + i * 4;
+        printf("mem[" FMT_WORD "] = " FMT_WORD "\n", addr, vaddr_read(addr, 4));
+      }
+    }
+    else {
+      printf("Invalid address!\n");
+    }
+  }
+  return 0;
+}
+
 static struct {
   const char *name;
   const char *description;
@@ -101,6 +132,7 @@ static struct {
   /* TODO: Add more commands */
   { "si", "Single step execution: [si N]", cmd_si },
   { "info", "Print program status: [info r / info w]", cmd_info },
+  { "x", "Scan the memory: [x N expr]", cmd_x },
 
 };
 

@@ -217,8 +217,8 @@ override ARGS += $(ARGS_BATCH)
 ### mtrace
 实现mtrace只需要在`paddr_read()`和`paddr_write()`中进行记录即可. 可以自行定义mtrace输出的格式. 和最后只输出一次的iringbuf不同, 程序一般会执行很多访存指令, 这意味着开启mtrace将会产生大量的输出, 因此最好可以在不需要的时候关闭mtrace
 
-- 直接在`paddr.c`的`paddr_read()`和`paddr_write()`函数中添加输出访存细节到log中，读内存输出地址和读长度，写内存输出地址、写长度和写数据
-- 在`Kconfig`中添加MTRACE选项，可以通过menuconfig来打开或者关闭mtrace
+- 直接在`paddr.c`的`paddr_read()`和`paddr_write()`函数中添加`printf()`输出，读内存输出读取地址,读长度和读出数据，写内存输出地址、写长度和写数据
+- 在`Kconfig`中添加`MTRACE`选项，可以通过menuconfig来打开或者关闭mtrace，并设置了`MTRACE_START`和`MTRACE_END`可以控制输出读写内容的地址范围
 
 # PA3
 

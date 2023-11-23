@@ -8,6 +8,7 @@ void init_buffer(iRingBuffer buffer) {
             buffer.data[i][j] = '\0';
         }
     }
+    printf("1111111\n");
     buffer.write_ptr = 0;
 }
 

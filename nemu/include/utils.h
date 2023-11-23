@@ -32,6 +32,8 @@ void init_buffer(iRingBuffer buffer);
 void write_data(iRingBuffer buffer, const char *data);
 void print_buffer(iRingBuffer buffer);
 
+extern iRingBuffer iringbuf; 
+
 // ----------- state -----------
 
 enum { NEMU_RUNNING, NEMU_STOP, NEMU_END, NEMU_ABORT, NEMU_QUIT };

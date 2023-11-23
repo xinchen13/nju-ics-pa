@@ -17,7 +17,7 @@
 #include <memory/paddr.h>
 // #include <utils.h>
 
-static iRingBuffer iringbuf; 
+iRingBuffer iringbuf; 
 
 void init_rand();
 void init_log(const char *log_file);

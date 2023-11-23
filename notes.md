@@ -207,11 +207,12 @@ override ARGS += $(ARGS_BATCH)
 - P.S. 暂不支持形如`%%d`形式的参数
 
 ### 实现iringbuf
-- 在`cpu-exec.c`中实现了`iringbuf`数据结构以及初始化、写入与输出的函数
-- 通过把128位的`s->logbuf`写入iringbuf来维护指令执行历史
+- 在`utils.h`中声明了`iringbuf`数据结构, 初始化、写入与输出的函数以及一个全局变量, 具体实现位于`src/utils/iringbuf.c`
+- 指令缓冲区的初始化放在`src/monitor/monitor.c`中的`init_monitor()`函数中进行
+- 在`trace_and_difftest()`中通过把128位的`s->logbuf`写入iringbuf来维护指令执行历史
 - 当遇到`nemu_state.state = NEMU_ABORT`时，输出缓冲区
-- 整体通过宏配置，实现了itrace的开关: 关闭时不队iringbuf进行初始化和读写
-- 把`inst.c`中的add指令注释后运行nemu，验证实现正确性
+- 整体`CONFIG_ITRACE`宏配置iringbuf的读写
+- 把`inst.c`中的lw指令注释后运行nemu，验证实现正确性
 
 # PA3
 

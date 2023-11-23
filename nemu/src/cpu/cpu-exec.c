@@ -32,12 +32,21 @@ static bool g_print_step = false;
 
 void device_update();
 
-static void trace_and_difftest(Decode *_this, vaddr_t dnpc, iRingBuffer buffer) {
+static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   #ifdef CONFIG_ITRACE_COND
     if (ITRACE_COND) { 
       log_write("%s\n", _this->logbuf);
     }
   #endif
+  // itrace ringbuf
+  #ifdef CONFIG_ITRACE
+    write_buffer(iringbuffer, _this->logbuf);  // write log to iringbuf
+    if (nemu_state.state == NEMU_ABORT) {
+      print_buffer(iringbuffer);
+    }
+  #endif
+  if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
+  IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   // check watchpoint 
   #ifdef CONFIG_WATCHPOINT
     int watchpoint_break = check_watchpoint();
@@ -45,15 +54,6 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc, iRingBuffer buffer) 
       nemu_state.state = NEMU_STOP;
     }
   #endif
-  // itrace ringbuf
-  #ifdef CONFIG_ITRACE
-    write_buffer(buffer, _this->logbuf);  // write log to iringbuf
-    if (nemu_state.state == NEMU_ABORT) {
-      print_buffer(buffer);
-    }
-  #endif
-  if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
-  IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {
@@ -87,12 +87,12 @@ static void exec_once(Decode *s, vaddr_t pc) {
 #endif
 }
 
-static void execute(uint64_t n, iRingBuffer buffer) {
+static void execute(uint64_t n) {
   Decode s;
   for (;n > 0; n --) {
     exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
-    trace_and_difftest(&s, cpu.pc, buffer);
+    trace_and_difftest(&s, cpu.pc);
     if (nemu_state.state != NEMU_RUNNING) break;
     IFDEF(CONFIG_DEVICE, device_update());
   }
@@ -123,8 +123,9 @@ void cpu_exec(uint64_t n) {
   }
 
   uint64_t timer_start = get_time();
+  init_buffer(iringbuffer);
 
-  execute(n, iringbuffer);
+  execute(n);
 
   uint64_t timer_end = get_time();
   g_timer += timer_end - timer_start;

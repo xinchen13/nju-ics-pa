@@ -58,10 +58,12 @@ void init_mem() {
 
 word_t paddr_read(paddr_t addr, int len) {
   if (likely(in_pmem(addr))) {
+    word_t read_data = pmem_read(addr, len);
     // #ifdef CONFIG_MTRACE
+    printf("[ read %3d bytes]: mem[" FMT_WORD "] =" FMT_WORD "\n", len, addr, read_data);
     printf("read: addr = " FMT_WORD ", len = %d\n", addr, len);
     // #endif
-    return pmem_read(addr, len);
+    return read_data;
   }
   IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   out_of_bound(addr);

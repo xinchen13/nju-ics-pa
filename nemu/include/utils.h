@@ -28,9 +28,12 @@ typedef struct {
     int write_ptr;
 } iRingBuffer;
 
-void init_buffer(iRingBuffer buffer);
-void write_buffer(iRingBuffer buffer, const char *log_buf);
-void print_buffer(iRingBuffer buffer);
+// void init_buffer(iRingBuffer buffer);
+// void write_buffer(iRingBuffer buffer, const char *log_buf);
+// void print_buffer(iRingBuffer buffer);
+void init_buffer(iRingBuffer *buffer);
+void write_buffer(iRingBuffer *buffer, const char *log_buf);
+void print_buffer(iRingBuffer *buffer);
 
 extern iRingBuffer iringbuffer; 
 

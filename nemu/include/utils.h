@@ -18,6 +18,20 @@
 
 #include <common.h>
 
+// --------itrace ringbuf------
+
+#define IRINGBUF_SIZE 20
+#define LOG_LEHGTH 128 // which is equal to s->logbuf
+
+typedef struct iRingBuffer {
+    char data[IRINGBUF_SIZE][LOG_LEHGTH];
+    int write_ptr;
+} iRingBuffer;
+
+void init_buffer(iRingBuffer buffer);
+void write_data(iRingBuffer buffer, const char *data);
+void print_buffer(iRingBuffer buffer);
+
 // ----------- state -----------
 
 enum { NEMU_RUNNING, NEMU_STOP, NEMU_END, NEMU_ABORT, NEMU_QUIT };

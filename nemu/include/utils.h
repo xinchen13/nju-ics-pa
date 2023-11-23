@@ -23,7 +23,7 @@
 #define IRINGBUF_SIZE 20
 #define LOG_LEHGTH 128 // which is equal to s->logbuf
 
-typedef struct iRingBuffer {
+typedef struct {
     char data[IRINGBUF_SIZE][LOG_LEHGTH];
     int write_ptr;
 } iRingBuffer;

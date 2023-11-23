@@ -12,11 +12,12 @@ void init_buffer(iRingBuffer buffer) {
 }
 
 void write_buffer(iRingBuffer buffer, const char *log_buf) {
+    int index = (buffer.write_ptr + 1) % IRINGBUF_SIZE;
     // buffer.write_ptr = (buffer.write_ptr + 1) % IRINGBUF_SIZE;
-    buffer.write_ptr = 2;
-    strcpy(buffer.data[buffer.write_ptr], log_buf);
+    strcpy(buffer.data[index], log_buf);
     printf("%s\n", log_buf);
-    printf("position: %d\n", buffer.write_ptr);
+    printf("position: %d\n", index);
+    buffer.write_ptr = index;
 }
 
 void print_buffer(iRingBuffer buffer) {

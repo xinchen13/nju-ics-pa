@@ -70,11 +70,6 @@ static void exec_once(Decode *s, vaddr_t pc) {
   memset(p, ' ', space_len);
   p += space_len;
 
-  write_data(iringbuf, s->logbuf);  // write log to iringbuf
-  if (nemu_state.state == NEMU_ABORT) {
-    print_buffer(iringbuf);
-  }
-
 #ifndef CONFIG_ISA_loongarch32r
   void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
   disassemble(p, s->logbuf + sizeof(s->logbuf) - p,

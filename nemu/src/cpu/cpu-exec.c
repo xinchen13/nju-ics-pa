@@ -36,10 +36,6 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
   if (ITRACE_COND) { 
     log_write("%s\n", _this->logbuf);
-    write_data(iringbuf, _this->logbuf);  // write log to iringbuf
-    if (nemu_state.state == NEMU_ABORT) {
-      print_buffer(iringbuf);
-    }
   }
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
@@ -73,6 +69,11 @@ static void exec_once(Decode *s, vaddr_t pc) {
   space_len = space_len * 3 + 1;
   memset(p, ' ', space_len);
   p += space_len;
+
+  write_data(iringbuf, s->logbuf);  // write log to iringbuf
+  if (nemu_state.state == NEMU_ABORT) {
+    print_buffer(iringbuf);
+  }
 
 #ifndef CONFIG_ISA_loongarch32r
   void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);

@@ -11,12 +11,11 @@ void init_buffer(iRingBuffer buffer) {
     buffer.write_ptr = 0;
 }
 
-void write_data(iRingBuffer buffer, const char *data) {
+void write_data(iRingBuffer buffer, const char *log_buf) {
     buffer.write_ptr = (buffer.write_ptr + 1) % IRINGBUF_SIZE;
-    strcpy(buffer.data[buffer.write_ptr], data);
-    printf("%s\n", data);
+    strcpy(buffer.data[buffer.write_ptr], log_buf);
+    printf("%s\n", log_buf);
     printf("wp: %d\n", buffer.write_ptr);
-    printf("%d", IRINGBUF_SIZE);
 }
 
 void print_buffer(iRingBuffer buffer) {

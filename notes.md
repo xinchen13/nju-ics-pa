@@ -220,6 +220,8 @@ override ARGS += $(ARGS_BATCH)
 - 直接在`paddr.c`的`paddr_read()`和`paddr_write()`函数中添加`printf()`输出，读内存输出读取地址,读长度和读出数据，写内存输出地址、写长度和写数据
 - 在`Kconfig`中添加`MTRACE`选项，可以通过menuconfig来打开或者关闭mtrace，并设置了`MTRACE_START`和`MTRACE_END`可以控制输出读写内容的地址范围
 
+### ftrace
+
 # PA3
 
 # PA4

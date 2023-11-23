@@ -1,5 +1,7 @@
 #include <utils.h>
 
+iRingBuffer iringbuf;
+
 void init_buffer(iRingBuffer buffer) {
     for (int i = 0; i < IRINGBUF_SIZE; i++) {
         for (int j = 0; j < LOG_LEHGTH; j++) {

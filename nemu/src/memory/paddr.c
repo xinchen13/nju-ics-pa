@@ -61,7 +61,9 @@ word_t paddr_read(paddr_t addr, int len) {
     word_t read_data = pmem_read(addr, len);
     // memory trace
     #ifdef CONFIG_MTRACE
-    printf("( read %3d bytes): mem[" FMT_WORD "] = " FMT_WORD "\n", len, addr, read_data);
+      if (addr >= CONFIG_MTRACE_START && addr <= CONFIG_MTRACE_END) {
+        printf("( read %3d bytes): mem[" FMT_WORD "] = " FMT_WORD "\n", len, addr, read_data);
+      }
     #endif
     return read_data;
   }
@@ -74,7 +76,9 @@ void paddr_write(paddr_t addr, int len, word_t data) {
   if (likely(in_pmem(addr))) {
     // memory trace
     #ifdef CONFIG_MTRACE
-    printf("(write %3d bytes): mem[" FMT_WORD "] = " FMT_WORD "\n", len, addr, data);
+      if (addr >= CONFIG_MTRACE_START && addr <= CONFIG_MTRACE_END) {
+        printf("(write %3d bytes): mem[" FMT_WORD "] = " FMT_WORD "\n", len, addr, data);
+      }
     #endif 
     pmem_write(addr, len, data); 
     return; 

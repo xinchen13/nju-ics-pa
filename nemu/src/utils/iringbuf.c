@@ -8,7 +8,7 @@ void init_buffer(iRingBuffer buffer) {
             buffer.data[i][j] = '\0';
         }
     }
-    buffer.write_ptr = 1;
+    buffer.write_ptr = 0;
 }
 
 void write_data(iRingBuffer buffer, const char *log_buf) {

@@ -131,12 +131,12 @@ config TRACE
 
 config TRACE_START
   depends on TRACE
-  int "When tracing is enabled (unit: number of instructions)"
+  int "When itracing is enabled (unit: number of instructions)"
   default 0
 
 config TRACE_END
   depends on TRACE
-  int "When tracing is disabled (unit: number of instructions)"
+  int "When itracing is disabled (unit: number of instructions)"
   default 10000
 
 config ITRACE
@@ -149,6 +149,15 @@ config ITRACE_COND
   string "Only trace instructions when the condition is true"
   default "true"
 
+config MTRACE_START
+  depends on TRACE
+  hex "Where mtracing is enabled (unit: address)"
+  default 0x80000000
+
+config MTRACE_END
+  depends on TRACE
+  hex "Where mtracing is disabled (unit: address)"
+  default 0x88000000
 
 config DIFFTEST
   depends on TARGET_NATIVE_ELF
@@ -159,20 +168,20 @@ config DIFFTEST
     Note that this will significantly reduce the performance of NEMU.
 
 config TOKEN_DEBUG
-  bool "Enable degub function make_token()"
+  bool "Enable degub information for make_token() in expr.c"
   default n
 
 config DEBUG_EXPR
-  bool "Enable test gen-expr"
+  bool "Enable test gen-expr for sdb_mainloop()"
   default n
 
 config WATCHPOINT
-  bool "Enable watchpoints check"
-  default n
+  bool "Enable watchpoints check in trace_and_difftest()"
+  default y
 
 config BATCH_MODE
-  bool "Run in batch mode"
-  default n
+  bool "Enable nemu run in batch mode"
+  default y
 
 choice
   prompt "Reference design"

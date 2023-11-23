@@ -206,13 +206,19 @@ override ARGS += $(ARGS_BATCH)
 - 如果fmt中字符不涉及格式化输出, 则直接写入out中, 否则对类型进行匹配, 格式化输出对应的参数
 - P.S. 暂不支持形如`%%d`形式的参数
 
-### 实现iringbuf
+### itrace: 实现iringbuf
 - 在`utils.h`中声明了`iringbuf`数据结构, 初始化、写入与输出的函数以及一个全局变量, 具体实现位于`src/utils/iringbuf.c`
 - 指令缓冲区的初始化放在`src/monitor/monitor.c`中的`init_monitor()`函数中进行
 - 在`trace_and_difftest()`中通过把128位的`s->logbuf`写入iringbuf来维护指令执行历史
 - 当遇到`nemu_state.state = NEMU_ABORT`时，输出缓冲区
 - 整体`CONFIG_ITRACE`宏配置iringbuf的读写
 - 把`inst.c`中的lw指令注释后运行nemu，验证实现正确性
+
+### mtrace
+实现mtrace只需要在`paddr_read()`和`paddr_write()`中进行记录即可. 可以自行定义mtrace输出的格式. 和最后只输出一次的iringbuf不同, 程序一般会执行很多访存指令, 这意味着开启mtrace将会产生大量的输出, 因此最好可以在不需要的时候关闭mtrace
+
+- 直接在`paddr.c`的`paddr_read()`和`paddr_write()`函数中添加输出访存细节到log中，读内存输出地址和读长度，写内存输出地址、写长度和写数据
+- 在`Kconfig`中添加MTRACE选项，可以通过menuconfig来打开或者关闭mtrace
 
 # PA3
 

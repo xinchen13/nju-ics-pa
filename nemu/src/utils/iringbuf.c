@@ -9,13 +9,12 @@ void init_buffer(iRingBuffer buffer) {
         }
     }
     buffer.write_ptr = 0;
-    printf("wp: %d\n", buffer.write_ptr);
 }
 
 void write_data(iRingBuffer buffer, const char *data) {
     buffer.write_ptr = (buffer.write_ptr + 1) % IRINGBUF_SIZE;
     strcpy(buffer.data[buffer.write_ptr], data);
-    // printf("wp: %d\n", buffer.write_ptr);
+    printf("wp: %d\n", buffer.write_ptr);
 }
 
 void print_buffer(iRingBuffer buffer) {

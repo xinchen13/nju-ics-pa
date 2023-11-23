@@ -32,7 +32,7 @@ void init_buffer(iRingBuffer buffer);
 void write_buffer(iRingBuffer buffer, const char *log_buf);
 void print_buffer(iRingBuffer buffer);
 
-extern iRingBuffer iringbuf; 
+extern iRingBuffer iringbuffer; 
 
 // ----------- state -----------
 

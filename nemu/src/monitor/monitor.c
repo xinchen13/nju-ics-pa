@@ -100,7 +100,7 @@ static int parse_args(int argc, char *argv[]) {
 
 void init_monitor(int argc, char *argv[]) {
   /* Perform some global initialization. */
-  init_buffer(iringbuf);  // initialize itrace ringbuf
+  init_buffer(iringbuffer);  // initialize itrace ringbuf
 
   /* Parse arguments. */
   parse_args(argc, argv);

@@ -49,9 +49,9 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 
   // itrace bufring
   #ifdef CONFIG_ITRACE
-    write_buffer(iringbuf, _this->logbuf);  // write log to iringbuf
+    write_buffer(iringbuffer, _this->logbuf);  // write log to iringbuf
     if (nemu_state.state == NEMU_ABORT) {
-      print_buffer(iringbuf);
+      print_buffer(iringbuffer);
     }
   #endif
 

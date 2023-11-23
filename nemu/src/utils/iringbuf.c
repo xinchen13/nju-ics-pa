@@ -1,6 +1,6 @@
 #include <utils.h>
 
-iRingBuffer iringbuf;
+iRingBuffer iringbuffer;
 
 void init_buffer(iRingBuffer buffer) {
     for (int i = 0; i < IRINGBUF_SIZE; i++) {

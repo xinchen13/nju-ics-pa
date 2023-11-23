@@ -16,6 +16,7 @@ void write_data(iRingBuffer buffer, const char *data) {
     strcpy(buffer.data[buffer.write_ptr], data);
     printf("%s\n", data);
     printf("wp: %d\n", buffer.write_ptr);
+    printf("%d", IRINGBUF_SIZE);
 }
 
 void print_buffer(iRingBuffer buffer) {
